@@ -6,7 +6,7 @@ organized as follows.
 
 * Some context around the current state of the feature of *module aliases* is
   given in section 1.
-* In section 2, we give an high-level view of our proposed change: *transparent
+* In section 2, we give a high-level view of our proposed change: *transparent
   signatures* and *static aliases*
 * In section 3, we discuss the technical details
 * In section 4, we briefly discuss a concurrent design: *transparent paths*.
@@ -48,7 +48,7 @@ patterns.
 
 ## 1.b. Presence
 
-In addition, the module system supports stores a `presence` flag (`Mp_present`,
+In addition, the module system stores a `presence` flag (`Mp_present`,
 `Mp_absent`) on module fields of signatures to indicate if the field is actually
 present at runtime or not. Absent fields must be aliases, but not all aliases
 are absent. This flag is not accessible to the user, but inferred by the
@@ -82,7 +82,7 @@ signatures:
 module X : (= P :> module type of P)
 ```
 
-The signature annotation can be omitted, when its known to be the same as the
+The signature annotation can be omitted, when it is known to be the same as the
 signature of `P`. Note that substituting a functor parameter by a path during
 functor application might break this invariant and require to re-expose the
 signature.
@@ -98,7 +98,7 @@ preserved, as in:
 module X = (struct type t = int type u = bool end : sig type t end)
 (* -> *) module X : sig type t end
 
-  (* transparent *)
+(* transparent *)
 module X = (struct type t = int type u = bool end :> sig type t end)
 (* -> *) module X : sig type t = int end
 ```
@@ -151,7 +151,7 @@ typechecker. We propose the following changes:
    * Have dynamic aliases be a subtype of static aliases (a dynamic alias can be
      coerced into a static one).
    * Maintain the current inference of presence (which alias is static and which
-     is dynamic) and the behavior of `-no-alias-deps`.
+     one is dynamic) and the behavior of `-no-alias-deps`.
 
 2. **Feature introduction 1/2**:
    * Introduce *transparent signatures* by extending dynamic aliases with an
@@ -214,7 +214,7 @@ ending in 4) is the following:
 
 ## 3.c Semantic model of transparent signatures
 
-The transparent signature `(=P<S)` is just compiled as `S`. Therefore, when two
+The transparent signature `(= P < S)` is just compiled as `S`. Therefore, when two
 modules share the same identity, it only means that the modules come from a
 coercion of the same module definition, but not necessarily the same *instance*
 (if the definition contains functor applications).
